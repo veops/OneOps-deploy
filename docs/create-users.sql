@@ -12,5 +12,5 @@ CREATE USER 'cmdb'@'%' IDENTIFIED BY '123456';
 GRANT ALL PRIVILEGES ON `oneterm`.* TO 'oneterm'@'%' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON `acl`.* TO 'acl'@'%';
 GRANT ALL PRIVILEGES ON  `cmdb`.* TO 'cmdb'@'%';
-GRANT SYSTEM_VARIABLES_ADMIN ON `cmdb`.* TO 'cmdb'@'%';
+GRANT SYSTEM_VARIABLES_ADMIN ON *.* TO 'cmdb'@'%';
 
