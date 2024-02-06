@@ -2,8 +2,7 @@ version: '3.5'
 
 services:
   ops-db:
-    #image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-db:2.3
-    image: mysql:latest
+    image: registry.cn-hangzhou.aliyuncs.com/veops/mysql:latest
     container_name: ops-db
     environment:
       TZ: Asia/Shanghai
@@ -24,7 +23,8 @@ services:
       - '63306:3306'
 
   ops-cache:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-cache:2.3
+    #image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-cache:2.3
+    image: registry.cn-hangzhou.aliyuncs.com/veops/redis:latest
     container_name: ops-cache
     environment:
       TZ: Asia/Shanghai
