@@ -1,0 +1,148 @@
+version: '3.5'
+
+services:
+  ops-db:
+    #image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-db:2.3
+    image: mysql:latest
+    container_name: ops-db
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: '123456'
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./docs/mysqld.cnf:/etc/mysql/conf.d/mysqld.cnf
+      - ./docs/create-users.sql:/docker-entrypoint-initdb.d/1-create-users.sql
+      - ./docs/cmdb.sql:/docker-entrypoint-initdb.d/2-cmdb.sql
+      #- ./docs/acl.sql:/docker-entrypoint-initdb.d/2-acl.sql
+      - ./docs/api.sql:/docker-entrypoint-initdb.d/3-oneterm-api.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      new:
+        aliases:
+          - mysql
+    ports:
+      - '63306:3306'
+
+  ops-cache:
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-cache:2.3
+    container_name: ops-cache
+    environment:
+      TZ: Asia/Shanghai
+    networks:
+      new:
+        aliases:
+          - redis
+
+  cmdb-api:
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.3.11
+#    build:
+#      context: .
+#      target: cmdb-api
+    container_name: cmdb-api-ops
+    volumes:
+      - ./docs/.env:/data/apps/cmdb/.env
+    environment:
+      TZ: Asia/Shanghai
+      WAIT_HOSTS: ops-db:3306, ops-cache:6379
+    command:
+      - /bin/sh
+      - -c
+      - |
+        sed -i "s#USE_ACL = False#USE_ACL = True#g" settings.py
+        /wait
+        flask db-setup
+        flask common-check-new-columns
+        gunicorn --workers=4 autoapp:app -b 0.0.0.0:5000 -D
+        
+        celery -A celery_worker.celery worker -E -Q one_cmdb_async --autoscale=4,1 --logfile=one_cmdb_async.log -D
+        celery -A celery_worker.celery worker -E -Q acl_async --logfile=one_acl_async.log --autoscale=2,1 -D
+        
+        nohup flask cmdb-trigger > trigger.log 2>&1 &
+        flask cmdb-init-cache
+        flask cmdb-init-acl
+        flask cmdb-counter > counter.log 2>&1
+
+    depends_on:
+      - ops-db
+      - ops-cache
+    networks:
+      new:
+        aliases:
+          - cmdb-api
+
+  oneterm-api:
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:1.24.1
+    container_name: oneterm-api-ops
+    volumes:
+      - file-data:/replay
+      - ./docs/api.yaml:/oneterm/config.yaml
+    depends_on:
+      - ops-db
+      - ops-cache
+    restart: always
+    networks:
+      new:
+        aliases:
+          - oneterm-api
+
+  oneterm-ssh:
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-ssh:1.24.2
+    container_name: oneterm-ssh-ops
+    ports:
+      - "12230:12228"
+    restart: always
+    tty: true
+    volumes:
+      - ./docs/ssh.yaml:/oneterm/config.yaml
+      - ./docs/scripts/entrypoint.sh:/oneterm/entrypoint.sh
+      - ssh-data:/root/.ssh
+    entrypoint: ./entrypoint.sh
+    depends_on:
+      - oneterm-api
+    networks:
+      new:
+        aliases:
+          - oneterm-ssh
+
+  ops-ui:
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-ui:1.24.1
+    container_name: ops-ui
+    depends_on:
+      - oneterm-api
+    environment:
+      TZ: Asia/Shanghai
+      ONETERM_API_HOST: oneterm-api:8080
+      CMDB_API_HOST: cmdb-api:5000
+      NGINX_PORT: 80
+    volumes:
+      - ./docs/nginx.cmdb.conf.example:/etc/nginx/conf.d/nginx.oneterm.conf.example
+    restart: always
+    command:
+      - /bin/sh
+      - -c
+      - |
+        envsubst '$$ONETERM_API_HOST  $$CMDB_API_HOST $$NGINX_PORT' < /etc/nginx/conf.d/nginx.oneterm.conf.example > /etc/nginx/conf.d/oneterm.conf
+        nginx -g  'daemon off;'
+    networks:
+      - new
+    ports:
+      - "8008:80"
+
+volumes:
+  db-data:
+    driver: local
+    name: cmdb_db-ops
+  file-data:
+    driver: local
+    name: oneterm_file-ops
+  ssh-data:
+    driver: local
+    name: oneterm_ssh-ops
+
+networks:
+  new:
+    driver: bridge
+    name: ops_network
+    ipam:
+      config:
+        - subnet: 172.36.0.0/24
