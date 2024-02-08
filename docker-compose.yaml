@@ -108,7 +108,7 @@ services:
           - oneterm-ssh
 
   ops-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-ui:1.24.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-ui:1.24.7
     container_name: ops-ui
     depends_on:
       - oneterm-api
