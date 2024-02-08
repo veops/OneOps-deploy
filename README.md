@@ -7,6 +7,14 @@ OneOps-Deploy是运维产品集合的一个一键部署服务，支持使用dock
 
 ---
 
+[English](README_en.md) / [中文](README.md)
+
+- 产品文档：https://veops.cn/docs/
+- 在线体验: <a href="https://term.veops.cn" target="_blank">OneOps</a>
+    - username: **`demo`**   或者   **`admin`**
+    - password: **`123456`**
+> **重要提示**: 体验账号是多人共享，因此后台数据会不定期重置
+
 ## 项目模块
 
 - [CMDB](https://github.com/veops/cmdb) 资产配置管理系统

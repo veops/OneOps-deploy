@@ -7,13 +7,21 @@ OneOps-Deploy is a one-click deployment service within the collection of operati
 
 ---
 
+[English](README_en.md) / [中文](README.md)
+
+- Product document：https://veops.cn/docs/
+- Preview online: <a href="https://term.veops.cn" target="_blank">OneOps</a>
+    - username: **`demo`**   or   **`admin`**
+    - password: 123456
+
+> **ATTENTION**: The experience account is shared among multiple users, therefore the backend data will be reset periodically.
+
 ## Modules
 
 - [CMDB](https://github.com/veops/cmdb) Configuration Management Database
 - [OneTerm](https://github.com/veops/oneterm) Jump Server Or Bastion Host
 - [Acl](https://github.com/veops/acl) Access Control System (already integrated into CMDB within the OneOps-Deploy project)
 
-##
 
 ## Installation
 
