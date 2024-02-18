@@ -11,9 +11,7 @@ services:
       - db-data:/var/lib/mysql
       - ./docs/mysqld.cnf:/etc/mysql/conf.d/mysqld.cnf
       - ./docs/create-users.sql:/docker-entrypoint-initdb.d/1-create-users.sql
-      - ./docs/cmdb.sql:/docker-entrypoint-initdb.d/2-cmdb.sql
-      #- ./docs/acl.sql:/docker-entrypoint-initdb.d/2-acl.sql
-      - ./docs/api.sql:/docker-entrypoint-initdb.d/3-oneterm-api.sql
+      - ./docs/ops.sql:/docker-entrypoint-initdb.d/ops.sql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     networks:
       new:
