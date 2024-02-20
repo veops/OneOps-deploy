@@ -127,7 +127,7 @@ services:
     networks:
       - new
     ports:
-      - "8008:80"
+      - "8080:80"
 
 volumes:
   db-data:

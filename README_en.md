@@ -3,7 +3,7 @@
   <a href="https://github.com/veops/OneOps-deploy/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPLv3-brightgreen" alt="License: GPLv3"></a>
   <a href="https://goreportcard.com/report/github.com/veops/messenger"><img src="https://goreportcard.com/badge/github.com/veops/messenger" alt="API"></a>
 </p>
-OneOps-Deploy is a one-click deployment service within the collection of operations and maintenance products, supporting the one-click deployment of all services using docker-compose. It currently includes CMDB, oneterm, acl, and will incorporate additional operations and maintenance products in the future.
+OneOps-Deploy is a one-click deployment service within the collection of operations and maintenance products, supporting the one-click deployment of all services using docker-compose. It currently includes CMDB, OneTerm, ACL, and will incorporate additional operations and maintenance products in the future.
 
 ---
 
@@ -20,7 +20,7 @@ OneOps-Deploy is a one-click deployment service within the collection of operati
 
 - [CMDB](https://github.com/veops/cmdb) Configuration Management Database
 - [OneTerm](https://github.com/veops/oneterm) Jump Server Or Bastion Host
-- [Acl](https://github.com/veops/acl) Access Control System (already integrated into CMDB within the OneOps-Deploy project)
+- [ACL](https://github.com/veops/acl) Access Control System (already integrated into CMDB within the OneOps-Deploy project)
 
 
 ## Installation
@@ -29,7 +29,7 @@ OneOps-Deploy is a one-click deployment service within the collection of operati
 - Step 1: Install the Docker environment and docker-compose
 - Step 2: Copy the project
 ```shell 
-git clone https://github.com/veops/cmdb.git
+git clone https://github.com/veops/OneOps-deploy.git
 ```
 - Step 3: Enter the main directory and execute:
 ```
@@ -38,7 +38,7 @@ docker-compose up -d
 
 ## Verification
 ### Browser
-- Address: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- Address: [http://127.0.0.1:8080](http://127.0.0.1:8080)
 - username: admin
 - password: 123456
 ### Terminal
