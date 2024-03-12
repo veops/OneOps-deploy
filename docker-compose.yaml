@@ -134,6 +134,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-guacd:24.3
     container_name: oneterm-guacd
     restart: always
+    user: root
     volumes:
       - file-data:/replay
     networks:
