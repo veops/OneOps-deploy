@@ -4,7 +4,7 @@
   <a href="https://goreportcard.com/report/github.com/veops/messenger"><img src="https://goreportcard.com/badge/github.com/veops/messenger" alt="API"></a>
 </p>
 
-**OneOps-Deploy**是一个运维产品集合，支持使用docker-compose一键部署所有服务。目前包含**CMDB**, **OneTerm**, **ACL**, 未来会加入其他一些运维产品。
+**OneOps-Deploy**是一个运维产品集合，支持使用Docker Compose一键部署所有服务。目前包含**CMDB**, **OneTerm**, **ACL**, 未来会加入其他一些运维产品。
 
 ---
 
@@ -25,14 +25,14 @@
 ## 安装
 
 ### Docker 一键快速构建
-- 第一步: 先安装 docker 环境, 以及docker-compose
+- 第一步: 先安装 Docker 环境, 以及Docker Compose (v2)
 - 第二步: 拷贝项目
 ```shell 
 git clone https://github.com/veops/OneOps-deploy.git
 ```
 - 第三步：进入主目录，执行:
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 ## 验证
