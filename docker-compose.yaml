@@ -26,6 +26,8 @@ services:
     container_name: ops-cache
     environment:
       TZ: Asia/Shanghai
+    volumes:
+      - redis-data:/data
     networks:
       new:
         aliases:
@@ -152,6 +154,10 @@ volumes:
   ssh-data:
     driver: local
     name: oneterm_ssh-ops
+  redis-data:
+    driver: local
+    name: redis-data-ops
+
 
 networks:
   new:
