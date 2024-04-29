@@ -12,6 +12,11 @@ services:
       - ./docs/mysqld.cnf:/etc/mysql/conf.d/mysqld.cnf
       - ./docs/create-users.sql:/docker-entrypoint-initdb.d/1-create-users.sql
       - ./docs/ops.sql:/docker-entrypoint-initdb.d/ops.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     networks:
       new:
@@ -28,6 +33,8 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
     networks:
       new:
         aliases:
@@ -45,6 +52,11 @@ services:
     environment:
       TZ: Asia/Shanghai
       WAIT_HOSTS: ops-db:3306, ops-cache:6379
+    depends_on:
+      ops-db:
+        condition: service_healthy
+      ops-cache:
+        condition: service_healthy
     command:
       - /bin/sh
       - -c
@@ -64,10 +76,6 @@ services:
         flask init-import-user-from-acl
         flask init-department
         flask cmdb-counter > counter.log 2>&1
-
-    depends_on:
-      - ops-db
-      - ops-cache
     networks:
       new:
         aliases:
