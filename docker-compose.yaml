@@ -82,7 +82,7 @@ services:
           - cmdb-api
 
   oneterm-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:24.3
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:24.5.5
     container_name: oneterm-api-ops
     volumes:
       - file-data:/replay
