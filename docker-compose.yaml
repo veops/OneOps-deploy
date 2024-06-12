@@ -79,6 +79,11 @@ services:
       new:
         aliases:
           - cmdb-api
+    healthcheck:
+      timeout: 3s
+      interval: 5s
+      retries: 10
+      test: "ps aux|grep -v grep|grep -v '1 root'|grep gunicorn || exit 1"
 
   oneterm-api:
     image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:24.5.5
@@ -89,9 +94,12 @@ services:
       - file-data:/replay
       - ./docs/api.yaml:/oneterm/config.yaml
     depends_on:
-      - ops-db
-      - ops-cache
-      - oneterm-guacd
+      ops-db:
+        condition: service_healthy
+      ops-cache:
+        condition: service_healthy
+      oneterm-guacd:
+        condition: service_healthy
     restart: always
     networks:
       new:
@@ -121,7 +129,8 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.5.1
     container_name: ops-ui
     depends_on:
-      - oneterm-api
+      cmdb-api:
+        condition: service_healthy
     environment:
       TZ: Asia/Shanghai
       ONETERM_API_HOST: oneterm-api:8080
@@ -140,7 +149,7 @@ services:
       - new
     ports:
       - "8080:80"
-  
+
   oneterm-guacd:
     image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-guacd:24.3
     container_name: oneterm-guacd
@@ -152,6 +161,9 @@ services:
       new:
         aliases:
           - oneterm-guacd
+    healthcheck:
+      test: "nc -z 127.0.0.1 4822 || exit 1"
+      interval: 5s
 
 volumes:
   db-data:
