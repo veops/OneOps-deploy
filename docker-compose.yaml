@@ -1,19 +1,18 @@
-version: '3.5'
-
 services:
   ops-db:
     image: registry.cn-hangzhou.aliyuncs.com/veops/mysql:latest
     container_name: ops-db
+    env_file:
+       - .env
     environment:
       TZ: Asia/Shanghai
-      MYSQL_ROOT_PASSWORD: '123456'
     volumes:
       - db-data:/var/lib/mysql
       - ./docs/mysqld.cnf:/etc/mysql/conf.d/mysqld.cnf
       - ./docs/create-users.sql:/docker-entrypoint-initdb.d/1-create-users.sql
       - ./docs/ops.sql:/docker-entrypoint-initdb.d/ops.sql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"", "-p$MYSQL_ROOT_PASSWORD"]
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-p$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -34,6 +33,7 @@ services:
     volumes:
       - redis-data:/data
     healthcheck:
+      interval: 10s
       test: ["CMD", "redis-cli", "ping"]
     networks:
       new:
@@ -42,9 +42,6 @@ services:
 
   cmdb-api:
     image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.5
-#    build:
-#      context: .
-#      target: cmdb-api
     container_name: cmdb-api-ops
     env_file:
       - .env
@@ -86,6 +83,8 @@ services:
   oneterm-api:
     image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:24.5.5
     container_name: oneterm-api-ops
+    env_file:
+      - .env
     volumes:
       - file-data:/replay
       - ./docs/api.yaml:/oneterm/config.yaml
