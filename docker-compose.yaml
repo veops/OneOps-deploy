@@ -13,7 +13,7 @@ services:
       - ./docs/create-users.sql:/docker-entrypoint-initdb.d/1-create-users.sql
       - ./docs/ops.sql:/docker-entrypoint-initdb.d/ops.sql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"", "-p$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -46,6 +46,8 @@ services:
 #      context: .
 #      target: cmdb-api
     container_name: cmdb-api-ops
+    env_file:
+      - .env
     volumes:
       - ./docs/.env:/data/apps/cmdb/.env
       - ./docs/app.py:/data/apps/cmdb/api/lib/perm/acl/app.py
