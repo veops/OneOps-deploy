@@ -40,7 +40,7 @@ auth:
         value: authorization
 
 cmdb:
-  url: http://host/api/v0.1
+  url: http://cmdb-api:5000/api/v0.1
 
 secretKey: 'xW2FAUfgffjmerTEBXADmURDOQ43ojLN'
 
