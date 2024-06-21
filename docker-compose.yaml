@@ -126,7 +126,7 @@ services:
           - oneterm-ssh
 
   ops-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.6.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.6.2
     container_name: ops-ui
     depends_on:
       cmdb-api:
