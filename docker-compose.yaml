@@ -41,7 +41,7 @@ services:
           - redis
 
   cmdb-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.6
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.10
     container_name: cmdb-api-ops
     env_file:
       - .env
@@ -126,7 +126,7 @@ services:
           - oneterm-ssh
 
   ops-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.6.2
+    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.7.30
     container_name: ops-ui
     depends_on:
       cmdb-api:
