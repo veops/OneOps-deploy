@@ -25,7 +25,6 @@ services:
       - '63306:3306'
 
   ops-cache:
-    #image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-cache:2.3
     image: registry.cn-hangzhou.aliyuncs.com/veops/redis:latest
     container_name: ops-cache
     environment:
@@ -41,7 +40,7 @@ services:
           - redis
 
   cmdb-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.12
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:latest
     container_name: cmdb-api-ops
     env_file:
       - .env
@@ -86,7 +85,7 @@ services:
       test: "ps aux|grep -v grep|grep -v '1 root'|grep gunicorn || exit 1"
 
   oneterm-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:24.5.5
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:latest
     container_name: oneterm-api-ops
     env_file:
       - .env
@@ -106,27 +105,8 @@ services:
         aliases:
           - oneterm-api
 
-  oneterm-ssh:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-ssh:24.3.1
-    container_name: oneterm-ssh-ops
-    ports:
-      - "12230:12228"
-    restart: always
-    tty: true
-    volumes:
-      - ./docs/ssh.yaml:/oneterm/config.yaml
-      - ./docs/scripts/entrypoint.sh:/oneterm/entrypoint.sh
-      - ssh-data:/root/.ssh
-    entrypoint: ./entrypoint.sh
-    depends_on:
-      - oneterm-api
-    networks:
-      new:
-        aliases:
-          - oneterm-ssh
-
   ops-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.9.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:latest
     container_name: ops-ui
     depends_on:
       cmdb-api:
@@ -151,7 +131,7 @@ services:
       - "8080:80"
 
   oneterm-guacd:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-guacd:24.3
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-guacd:latest
     container_name: oneterm-guacd
     restart: always
     user: root
