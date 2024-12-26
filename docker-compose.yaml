@@ -40,7 +40,7 @@ services:
           - redis
 
   cmdb-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.15
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.17
     container_name: cmdb-api-ops
     env_file:
       - .env
@@ -73,6 +73,7 @@ services:
         flask cmdb-init-acl
         flask init-import-user-from-acl
         flask init-department
+        nohup flask cmdb-patch -v 2.4.17 &
         flask cmdb-counter > counter.log 2>&1
     networks:
       new:
@@ -106,7 +107,7 @@ services:
           - oneterm-api
 
   ops-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.11.3
+    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.12.1
     container_name: ops-ui
     depends_on:
       cmdb-api:
