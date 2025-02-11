@@ -40,7 +40,7 @@ services:
           - redis
 
   cmdb-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.4.17
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.5.1
     container_name: cmdb-api-ops
     env_file:
       - .env
@@ -86,7 +86,7 @@ services:
       test: "ps aux|grep -v grep|grep -v '1 root'|grep gunicorn || exit 1"
 
   oneterm-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:latest
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:25.2.1
     container_name: oneterm-api-ops
     env_file:
       - .env
@@ -107,7 +107,7 @@ services:
           - oneterm-api
 
   ops-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:24.12.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:25.2.1
     container_name: ops-ui
     depends_on:
       cmdb-api:
