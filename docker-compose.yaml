@@ -1,6 +1,6 @@
 services:
   ops-db:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/mysql:latest
+    image: registry.cn-hangzhou.aliyuncs.com/veops/mysql:8.2.0
     container_name: ops-db
     env_file:
        - .env
@@ -25,7 +25,7 @@ services:
       - '63306:3306'
 
   ops-cache:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/redis:latest
+    image: registry.cn-hangzhou.aliyuncs.com/veops/redis:7.2.3
     container_name: ops-cache
     environment:
       TZ: Asia/Shanghai
@@ -40,7 +40,7 @@ services:
           - redis
 
   cmdb-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.5.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.5.2
     container_name: cmdb-api-ops
     env_file:
       - .env
@@ -86,7 +86,7 @@ services:
       test: "ps aux|grep -v grep|grep -v '1 root'|grep gunicorn || exit 1"
 
   oneterm-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:25.2.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:v25.5.1
     container_name: oneterm-api-ops
     env_file:
       - .env
@@ -100,6 +100,16 @@ services:
         condition: service_healthy
       oneterm-guacd:
         condition: service_healthy
+      cmdb-api:
+        condition: service_healthy
+    command:
+      - "./server"
+      - "config.yaml"
+    healthcheck:
+      test: "nc -z 127.0.0.1 8080 || exit 1"
+      interval: 5s
+      timeout: 3s
+      retries: 10
     restart: always
     networks:
       new:
@@ -107,10 +117,12 @@ services:
           - oneterm-api
 
   ops-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:25.2.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:25.5.1
     container_name: ops-ui
     depends_on:
       cmdb-api:
+        condition: service_healthy
+      oneterm-api:
         condition: service_healthy
     environment:
       TZ: Asia/Shanghai
@@ -132,7 +144,7 @@ services:
       - "8080:80"
 
   oneterm-guacd:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-guacd:latest
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-guacd:1.5.4
     container_name: oneterm-guacd
     restart: always
     user: root
