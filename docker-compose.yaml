@@ -86,7 +86,7 @@ services:
       test: "ps aux|grep -v grep|grep -v '1 root'|grep gunicorn || exit 1"
 
   oneterm-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:v25.5.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:v25.5.1-fix
     container_name: oneterm-api-ops
     env_file:
       - .env
