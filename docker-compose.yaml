@@ -40,7 +40,7 @@ services:
           - redis
 
   cmdb-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.5.2
+    image: registry.cn-hangzhou.aliyuncs.com/veops/cmdb-api:2.5.4
     container_name: cmdb-api-ops
     env_file:
       - .env
@@ -86,12 +86,15 @@ services:
       test: "ps aux|grep -v grep|grep -v '1 root'|grep gunicorn || exit 1"
 
   oneterm-api:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:v25.5.1-fix2
+    image: registry.cn-hangzhou.aliyuncs.com/veops/oneterm-api:v25.8.2
     container_name: oneterm-api-ops
     env_file:
       - .env
+    environment:
+      ONETERM_RDP_DRIVE_PATH: /rdp
     volumes:
       - file-data:/replay
+      - ./volume/rdp:/rdp
       - ./docs/api.yaml:/oneterm/config.yaml
     depends_on:
       ops-db:
@@ -117,7 +120,7 @@ services:
           - oneterm-api
 
   ops-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:25.5.1
+    image: registry.cn-hangzhou.aliyuncs.com/veops/ops-ui:25.8.2
     container_name: ops-ui
     depends_on:
       cmdb-api:
